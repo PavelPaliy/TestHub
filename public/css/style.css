@@ -1,0 +1,27 @@
+.white-nav{
+    background-color: white;
+}
+form{
+    padding-top: 1.5em;
+}
+#passWrong{
+    color:red;
+    font-size: 16px;
+}
+li.list-group-item:hover{
+    background-color: #eeeeee;
+}
+a.button{
+    color: white;
+}
+a.black{
+    color: black;
+}
+
+ul.right-menu{
+    list-style-type: none;
+    background-color: #F8F9FA;
+}
+.left{
+
+}
