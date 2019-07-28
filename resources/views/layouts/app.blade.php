@@ -19,11 +19,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                @if(Auth::user())
-                    <li class="nav-item active">
+                    <li >
                         <a class="nav-link" href="{{ route('test.create') }}">Создать тест</a>
                     </li>
-                @endif
+                @guest
+                    <li><a href="{{ route('login') }}" class="nav-link">Войти</a></li>
+                    <li><a href="{{ route('register') }}" class="nav-link">Зарегистрироваться</a></li>
+                @else
+                <li >
+                    <a class="nav-link" href="{{ route('dashboard') }}">Админка</a>
+                </li>
+                <li>
+                    <a href="{{ route('logout') }}" class="nav-link"
+                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                        Выйти
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                    </form>
+                </li>
+                @endguest
 
 
             </ul>
@@ -33,14 +50,12 @@
 </header>
 <main>
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-8 right">
-                @yield('content')
-            </div>
-            <div class = 'col-md-4 left'>
-                @yield('left')
-            </div>
+    <div class="wrapper">
+        <div class="content">
+            @yield('content')
+        </div>
+        <div class="right">
+            @yield('right')
         </div>
     </div>
 </main>

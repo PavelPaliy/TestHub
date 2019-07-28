@@ -16,4 +16,7 @@ class UserController extends Controller
     {
         return view('dashboard');
     }
+    public function results(){
+
+    }
 }

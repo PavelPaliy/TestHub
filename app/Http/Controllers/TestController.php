@@ -7,11 +7,17 @@ use App\Library\Services\ArrValidMaker;
 use App\Library\Services\PassTest;
 use App\Repositories\QuestionRepository;
 use App\Repositories\TestRepository;
+use App\User;
+
 use Illuminate\Http\Request;
 use App\Test;
 use App\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
+
+
 
 
 class TestController extends Controller
@@ -42,14 +48,30 @@ class TestController extends Controller
 
     public function store(StoreTest $request)
     {
+
         $i = 1;
         $max = 0;
         while ($request->input('score' . $i)) {
             $max += $request->input('score' . $i);
             $i++;
         }
-        $input = ['name' => $request->title, 'intro' => $request->intro, 'time' => $request->time, 'minScore' => $request->minScore, 'maxScore' => $max, 'user_id'=>Auth::user()->id];
+        if(Auth::user())
+        {
+            $user = Auth::user();
+        }
+        elseif (Cache::has('name')){
+            $user = User::where('name', '=', Cache::get('name'))->firstOrFail();
+
+        }
+        else{
+            $str = Str::random(32);
+            //Cache::add('name', $str, 1000);
+            $user = User::create(['surname'=>$str, 'name'=>$str, 'patronymic'=>$str, 'email'=>$str, 'password'=>$str]);
+        }
+
+        $input = ['name' => $request->title, 'intro' => $request->intro, 'time' => $request->time, 'minScore' => $request->minScore, 'maxScore' => $max];
         $this->model->create($input);
+        $user->tests()->save($this->model->getModel());
         $this->model->addTags($request->tags);
         $this->model->addQuestions($request);
         return redirect()->route('test.show', ['id' => $this->model->getModel()->id]);

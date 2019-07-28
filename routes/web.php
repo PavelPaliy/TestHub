@@ -25,6 +25,7 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/login', 'Auth\LoginTeacherController@login')->name('teacher.login');
     Route::get('/dashboard', 'TeacherController@index')->name('teacher.dashboard');
 });*/
+Route::get('/stat/results', 'UserController@results')->name('results');
 Route::name('test.')->group(function () {
     Route::get('/new', 'TestController@create')->name('create');
     Route::post('/store', 'TestController@store')->name('store');

@@ -6,7 +6,7 @@
     <h1>TestHub</h1>
 @endsection
 
-@section('left')
+@section('right')
     <ul class="right-menu">
         <li><a href="#">Cписок созданных мной тестов</a></li>
         <li><a href="#">Сданные мной тесты</a></li>
