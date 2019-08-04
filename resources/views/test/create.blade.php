@@ -43,6 +43,8 @@
         <div class="questions">
 
             <div class="q" id ="q1">
+                <hr>
+                <h4>1 вопрос</h4>
                 <div class = "form-group">
                     <label>Название</label><input type="text" name="title1" class="text form-control">
                 </div>
@@ -77,4 +79,8 @@
     <script src ="{{ URL::asset('js/addQ.js') }}"></script>
     <script src ="{{ URL::asset('js/tags.js') }}"></script>
     <script src ="{{ URL::asset('js/valid.js') }}"></script>
+    <script src ="{{ URL::asset('js/changeType.js') }}"></script>
+    <script src ="{{ URL::asset('js/deleteA.js') }}"></script>
+    <script src ="{{ URL::asset('js/deleteQ.js') }}"></script>
+
 @endsection

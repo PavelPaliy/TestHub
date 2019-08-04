@@ -8,7 +8,9 @@ use App\Library\Services\PassTest;
 use App\Repositories\QuestionRepository;
 use App\Repositories\TestRepository;
 use App\User;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InfoTest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Test;
 use App\Tag;
@@ -48,7 +50,6 @@ class TestController extends Controller
 
     public function store(StoreTest $request)
     {
-
         $i = 1;
         $max = 0;
         while ($request->input('score' . $i)) {
@@ -59,14 +60,14 @@ class TestController extends Controller
         {
             $user = Auth::user();
         }
-        elseif (Cache::has('name')){
-            $user = User::where('name', '=', Cache::get('name'))->firstOrFail();
-
+        elseif (isset($_COOKIE['name'])){
+            $name = $_COOKIE['name'];
+            $user = User::where('email', '=', $name)->firstOrFail();
         }
         else{
             $str = Str::random(32);
-            //Cache::add('name', $str, 1000);
-            $user = User::create(['surname'=>$str, 'name'=>$str, 'patronymic'=>$str, 'email'=>$str, 'password'=>$str]);
+            setcookie('name', $str, time()+360000);
+            $user = User::create(['surname'=>'Анонов', 'name'=> 'Анон', 'patronymic'=>$str, 'email'=>$str, 'password'=>$str]);
         }
 
         $input = ['name' => $request->title, 'intro' => $request->intro, 'time' => $request->time, 'minScore' => $request->minScore, 'maxScore' => $max];
@@ -74,17 +75,26 @@ class TestController extends Controller
         $user->tests()->save($this->model->getModel());
         $this->model->addTags($request->tags);
         $this->model->addQuestions($request);
-        return redirect()->route('test.show', ['id' => $this->model->getModel()->id]);
+        return redirect()->route('test.publish', ['id' => $this->model->getModel()->id]);
     }
 
-
+    public function publish($id)
+    {
+        $test = Test::where('id', '=', $id)->firstOrFail();
+        return view('test.publish',['test'=>$test]);
+    }
     public function show($id)
     {
-        //
         $test = Test::where('id', '=', $id)->firstOrFail();
-        return view('test.publish', ['test'=>$test]);
+        return view('test.show', ['test'=>$test]);
     }
 
+    public function email(Request $request)
+    {
+        $user = User::where('patronymic', '=', $_COOKIE['name'])
+            ->update(['email' => $request->email]);
+        Mail::to($user)->send(new InfoTest());
+    }
 
     public function questions($id, Request $request, PassTest $passTest)
     {

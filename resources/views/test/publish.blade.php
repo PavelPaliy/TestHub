@@ -4,11 +4,16 @@
 
 @section('content')
     <h1>{{ $test->name }}</h1>
-    @if($test->intro!=null)
-        <p>{{ $test->intro }}</p>
+    @if(Auth::user())
+        <p>На ваш email {{ Auth::user()->email }} выслана информация про тест.</p>
+    @else
+        <p>Введите email, на который будет выслана информация про тест.</p>
+        <form action = '{{ route('test.email') }}' method="POST">
+            {{csrf_field()}}
+            <div class = "form-group">
+                <label>Email</label><input type ="email" class="text form-control" name="email">
+            </div>
+            <button class="btn btn-success" type="submit">Отправить</button>
+        </form>
     @endif
-    <p>Чтобы успешкно пройти тест нужно набрать {{ $test->minScore }} баллов. Время прохождения теста {{ $test->time }} минут.</p>
-    <form action="{{ route('test.pass', $test->id) }}" method="get">
-        <input type="submit" value="Пройти тест">
-    </form>
 @endsection

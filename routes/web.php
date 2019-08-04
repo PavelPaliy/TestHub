@@ -29,9 +29,11 @@ Route::get('/stat/results', 'UserController@results')->name('results');
 Route::name('test.')->group(function () {
     Route::get('/new', 'TestController@create')->name('create');
     Route::post('/store', 'TestController@store')->name('store');
+    Route::get('/publish/{id}', 'TestController@publish')->name('publish');
     Route::get('/test/{id}', 'TestController@show')->name('show');
     Route::get('/tags/{word}', 'TestController@tags')->name('tags');
     Route::match(['get', 'post'], '/test/{id}/question', 'TestController@questions')->name('pass');
     Route::get('/test/{id}/result', 'TestController@result')->name('result');
+    Route::post('/test/mail', 'TestController@email')->name('email');
 
 });

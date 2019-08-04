@@ -36,4 +36,27 @@ class ArrValidMaker
         }
         return $arr;
     }
+    public function doMessages($request){
+        $result = ['title.required' => 'Введите название теста!',];
+        $i = 1;
+        while(array_key_exists('typeQ'.$i, $request))
+        {
+            $result['title'.$i.'.required']='Введите '.$i.' вопрос!';
+            $result['score'.$i.'.required']='Введите балы за '.$i.' вопрос!';
+            if($request['typeQ'.$i] == 1 || $request['typeQ'.$i] == 2)
+            {
+                $j = 1;
+                while(array_key_exists($i.'var'.$j, $request))
+                {
+                    $result[$i."var".$j.'.required']='Заполните все ответы в '.$i.'вопросе';
+                    $j++;
+                }
+            }
+            else{
+                $arr['answer'.$i.'.required']='Заполните все ответы в '.$i.'вопросе';
+            }
+            $i++;
+        }
+        return $result;
+    }
 }

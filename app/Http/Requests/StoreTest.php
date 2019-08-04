@@ -28,4 +28,9 @@ class StoreTest extends FormRequest
         $arr = $arrValidMaker->doArr($this->request->all());
         return $arr;
     }
+    public function messages()
+    {
+        $arrValidMaker = new ArrValidMaker();
+        return $arrValidMaker->doMessages($this->request->all());
+    }
 }
